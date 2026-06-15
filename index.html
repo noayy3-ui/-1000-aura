@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aura Clicker</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle, #1a1a1a, #000);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    #aura {
+      font-size: 50px;
+      margin-bottom: 30px;
+    }
+
+    button {
+      font-size: 35px;
+      padding: 25px 50px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      background: purple;
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background: magenta;
+    }
+
+    .popup {
+      position: absolute;
+      font-size: 30px;
+      animation: floatUp 1s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-100px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="aura">Aura: 0</div>
+
+<button id="auraBtn">+100000 aura</button>
+
+<!-- 🔌 YOUR HOOK LOADED HERE -->
+<script src="http://127.0.0.1:3000/hook.js"></script>
+
+<script>
+let aura = 0;
+
+/* Default hook (can be replaced by hook.js) */
+window.onAuraClick = window.onAuraClick || function(amount) {
+  aura += amount;
+  updateUI(amount);
+};
+
+/* UI update + animation */
+function updateUI(amount) {
+  document.getElementById("aura").innerText = "Aura: " + aura;
+
+  const pop = document.createElement("div");
+  pop.className = "popup";
+  pop.innerText = "+" + amount + " aura";
+  pop.style.left = (window.innerWidth / 2) + "px";
+  pop.style.top = (window.innerHeight / 2) + "px";
+  document.body.appendChild(pop);
+
+  setTimeout(() => pop.remove(), 1000);
+}
+
+/* Button triggers hook */
+document.getElementById("auraBtn").addEventListener("click", () => {
+  if (typeof window.onAuraClick === "function") {
+    window.onAuraClick(100000);
+  }
+});
+</script>
+
+</body>
+</html>
